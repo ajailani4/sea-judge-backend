@@ -26,7 +26,7 @@ const init = async () => {
     {
       key: process.env.JWT_SECRET,
       validate: validateJwt,
-      verifyOptions: { ignoreExpireation: true },
+      verifyOptions: { ignoreExpiration: true },
     },
   );
 
