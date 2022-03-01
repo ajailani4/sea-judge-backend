@@ -1,5 +1,6 @@
 const Hapi = require('@hapi/hapi');
 const dotenv = require('dotenv');
+const routes = require('./routes');
 
 const init = async () => {
   dotenv.config();
@@ -13,6 +14,9 @@ const init = async () => {
       },
     },
   });
+
+  // Setup routes
+  server.route(routes);
 
   // Start server
   await server.start();
