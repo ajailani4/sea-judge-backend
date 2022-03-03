@@ -25,6 +25,7 @@ const getReports = async (request, h) => {
           violation: report.violation,
           location: report.location,
           date: report.date.toISOString().split('T')[0],
+          time: report.time.substring(0, 5),
         })),
       });
 
