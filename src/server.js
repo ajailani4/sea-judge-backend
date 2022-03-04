@@ -1,7 +1,7 @@
 const Hapi = require('@hapi/hapi');
 const dotenv = require('dotenv');
 
-const init = async () => {
+const init = async() => {
   dotenv.config();
 
   const server = Hapi.server({
