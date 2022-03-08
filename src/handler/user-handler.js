@@ -5,7 +5,7 @@ const { generateJwt } = require('../util/jwt-util');
 
 const saltRounds = 10;
 
-const register = async (request, h) => {
+const register = async(request, h) => {
   const {
     name,
     username,
@@ -20,8 +20,7 @@ const register = async (request, h) => {
   try {
     // Check if username already exists or not
     result = await pool.query(
-      'SELECT * FROM public."user" WHERE username=$1',
-      [username],
+      'SELECT * FROM public."user" WHERE username=$1', [username],
     );
 
     if (result.rows[0]) {
@@ -37,8 +36,7 @@ const register = async (request, h) => {
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
       result = await pool.query(
-        'INSERT INTO public."user" (username, password, name, state, job, phone_number) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [username, hashedPassword, name, state, job, phoneNumber],
+        'INSERT INTO public."user" (username, password, name, state, job, phone_number) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [username, hashedPassword, name, state, job, phoneNumber],
       );
 
       response = h.response({
@@ -67,14 +65,13 @@ const register = async (request, h) => {
   return response;
 };
 
-const login = async (request, h) => {
+const login = async(request, h) => {
   const { username, password } = request.payload;
   let response = '';
 
   try {
     const result = await pool.query(
-      'SELECT * FROM public."user" WHERE username=$1',
-      [username],
+      'SELECT * FROM public."user" WHERE username=$1', [username],
     );
 
     if (result.rows[0]) {
