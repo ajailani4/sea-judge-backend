@@ -49,5 +49,46 @@ const getReports = async(request, h) => {
   return response;
 };
 
+const getReportsUser = async(request, h) => {
+  const { username } = request.params;
+  let response = '';
+  let result = '';
 
-module.exports = { getReports };
+  try {
+    // Get all reports by username
+    result = await pool.query(
+      `SELECT * FROM public."report" WHERE username=$1`, [username],
+    );
+
+    response = h.response({
+      code: 200,
+      status: 'OK',
+      data: result.rows.map((report) => ({
+        id: report.id,
+        username: report.username,
+        reporter: report.reporter,
+        image: report.image,
+        violation: report.violation,
+        location: report.location,
+        date: report.date.toISOString().split('T')[0],
+        time: report.time.substring(0, 5),
+      })),
+    });
+
+    response.code(200);
+  } catch (err) {
+    response = h.response({
+      code: 400,
+      status: 'Bad Request',
+      message: 'error',
+    });
+
+    response.code(400);
+
+    console.log(err);
+  }
+
+  return response;
+};
+
+module.exports = { getReports, getReportsUser };
