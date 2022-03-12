@@ -1,6 +1,6 @@
 const pool = require('../config/db-config');
 
-const getReports = async(request, h) => {
+const getReports = async (request, h) => {
   const { searchQuery } = request.query;
   let response = '';
   let result = '';
@@ -9,7 +9,7 @@ const getReports = async(request, h) => {
     if (!searchQuery) {
       // Get all reports
       result = await pool.query(
-        `SELECT * FROM public."report"`,
+        'SELECT * FROM public."report"',
       );
     } else {
       // Get searched reports
@@ -49,16 +49,14 @@ const getReports = async(request, h) => {
   return response;
 };
 
-const getReportsUser = async(request, h) => {
+const getReportsUser = async (request, h) => {
   const { username } = request.params;
   let response = '';
   let result = '';
 
   try {
     // Get all reports by username
-    result = await pool.query(
-      `SELECT * FROM public."report" WHERE username=$1`, [username],
-    );
+    result = await pool.query('SELECT * FROM public."report" WHERE username=$1', [username]);
 
     response = h.response({
       code: 200,
