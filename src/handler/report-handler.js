@@ -10,7 +10,7 @@ const getReports = async(request, h) => {
     if (!searchQuery) {
       // Get all reports
       result = await pool.query(
-        `SELECT * FROM public."report"`,
+        'SELECT * FROM public."report"',
       );
     } else {
       // Get searched reports
@@ -26,7 +26,7 @@ const getReports = async(request, h) => {
         id: report.id,
         username: report.username,
         reporter: report.reporter,
-        image: report.image,
+        photo: report.photo,
         violation: report.violation,
         location: report.location,
         date: report.date.toISOString().split('T')[0],
@@ -57,9 +57,7 @@ const getReportsUser = async(request, h) => {
 
   try {
     // Get all reports by username
-    result = await pool.query(
-      `SELECT * FROM public."report" WHERE username=$1`, [username],
-    );
+    result = await pool.query('SELECT * FROM public."report" WHERE username=$1', [username]);
 
     response = h.response({
       code: 200,
@@ -68,7 +66,7 @@ const getReportsUser = async(request, h) => {
         id: report.id,
         username: report.username,
         reporter: report.reporter,
-        image: report.image,
+        photo: report.image,
         violation: report.violation,
         location: report.location,
         date: report.date.toISOString().split('T')[0],
@@ -101,20 +99,20 @@ const uploadReport = async(request, h) => {
     time,
   } = request.payload;
   let {
-    iamge,
+    photo,
   } = request.payload;
   let response = '';
 
   try {
-    const uplaodImageResult = await uploadImage('report_images', image);
-    image = uplaodImageResult.url;
+    const uplaodImageResult = await uploadImage('report_images', photo);
+    photo = uplaodImageResult.url;
 
     const result = await pool.query(
-      'INSERT INTO public."report" (username,violation,location,image,date,time) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *', [
+      'INSERT INTO public."report" (username,violation,location,photo,date,time) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *', [
         username,
         violation,
         location,
-        image,
+        photo,
         date,
         time,
       ],

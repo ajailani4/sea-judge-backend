@@ -4,9 +4,7 @@ const validateJwt = async(decoded, request, h) => {
   let isValidated = false;
 
   try {
-    const result = await pool.query(
-      'SELECT * FROM public."user" WHERE username=$1', [decoded.username],
-    );
+    const result = await pool.query('SELECT * FROM public."user" WHERE username=$1', [decoded.username]);
 
     if (result.rows[0]) {
       isValidated = true;
