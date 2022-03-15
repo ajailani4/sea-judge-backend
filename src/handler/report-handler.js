@@ -1,4 +1,5 @@
 const pool = require('../config/db-config');
+const { uploadImage } = require('../util/cloudinary-util');
 
 const getReports = async(request, h) => {
   const { searchQuery } = request.query;
@@ -91,4 +92,64 @@ const getReportsUser = async(request, h) => {
   return response;
 };
 
-module.exports = { getReports, getReportsUser };
+const uploadReport = async(request, h) => {
+  const {
+    username,
+    violation,
+    location,
+    date,
+    time,
+  } = request.payload;
+  let {
+    iamge,
+  } = request.payload;
+  let response = '';
+
+  try {
+    const uplaodImageResult = await uploadImage('report_images', image);
+    image = uplaodImageResult.url;
+
+    const result = await pool.query(
+      'INSERT INTO public."report" (username,violation,location,image,date,time) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *', [
+        username,
+        violation,
+        location,
+        image,
+        date,
+        time,
+      ],
+    );
+
+    if (result) {
+      response = h.response({
+        code: 201,
+        status: 'Created',
+        message: 'New report has been added successfully',
+      });
+
+      response.code(201);
+    } else {
+      response = h.response({
+        code: 500,
+        status: 'Internal Server Error',
+        message: 'New plant cannot be added',
+      });
+
+      response.code(500);
+    }
+  } catch (err) {
+    response = h.response({
+      code: 400,
+      status: 'Bad Request',
+      message: 'error',
+    });
+
+    response.code(400);
+
+    console.log(err);
+  }
+
+  return response;
+};
+
+module.exports = { getReports, getReportsUser, uploadReport };
