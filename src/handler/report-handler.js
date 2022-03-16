@@ -93,6 +93,7 @@ const getReportsUser = async(request, h) => {
 const uploadReport = async(request, h) => {
   const {
     username,
+    reporter,
     violation,
     location,
     date,
@@ -105,14 +106,15 @@ const uploadReport = async(request, h) => {
 
   try {
     const uploadPhotoResult = await uploadPhoto('report_photo', photo);
-    photo = uploadPhotoR.url;
+    photo = uploadPhotoResult.url;
 
     const result = await pool.query(
-      'INSERT INTO public."report" (username,violation,location,photo,date,time) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *', [
+      'INSERT INTO public."report" (username, reporter, photo, violation, location, date, time) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [
         username,
+        reporter,
+        photo,
         violation,
         location,
-        photo,
         date,
         time,
       ],
