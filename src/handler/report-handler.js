@@ -65,7 +65,7 @@ const getReportsUser = async (request, h) => {
         id: report.id,
         username: report.username,
         reporter: report.reporter,
-        photo: report.image,
+        photo: report.photo,
         violation: report.violation,
         location: report.location,
         date: report.date.toISOString().split('T')[0],
