@@ -1,5 +1,5 @@
 const pool = require('../config/db-config');
-const { uploadImage } = require('../util/cloudinary-util');
+const { uploadPhoto } = require('../util/cloudinary-util');
 
 const getReports = async(request, h) => {
   const { searchQuery } = request.query;
@@ -104,8 +104,8 @@ const uploadReport = async(request, h) => {
   let response = '';
 
   try {
-    const uplaodImageResult = await uploadImage('report_images', photo);
-    photo = uplaodImageResult.url;
+    const uploadPhotoResult = await uploadPhoto('report_photo', photo);
+    photo = uploadPhotoR.url;
 
     const result = await pool.query(
       'INSERT INTO public."report" (username,violation,location,photo,date,time) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *', [
@@ -130,7 +130,7 @@ const uploadReport = async(request, h) => {
       response = h.response({
         code: 500,
         status: 'Internal Server Error',
-        message: 'New plant cannot be added',
+        message: 'New report cannot be added',
       });
 
       response.code(500);

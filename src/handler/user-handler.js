@@ -5,7 +5,7 @@ const { generateJwt } = require('../util/jwt-util');
 
 const saltRounds = 10;
 
-const register = async (request, h) => {
+const register = async(request, h) => {
   const {
     name,
     username,
@@ -61,7 +61,7 @@ const register = async (request, h) => {
   return response;
 };
 
-const login = async (request, h) => {
+const login = async(request, h) => {
   const { username, password } = request.payload;
   let response = '';
 

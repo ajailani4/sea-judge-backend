@@ -4,7 +4,7 @@ const hapiAuthJWT = require('hapi-auth-jwt2');
 const routes = require('./routes');
 const { validateJwt } = require('./util/jwt-util');
 
-const init = async () => {
+const init = async() => {
   dotenv.config();
 
   const server = Hapi.server({
