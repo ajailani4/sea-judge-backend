@@ -10,12 +10,12 @@ const getReports = async(request, h) => {
     if (!searchQuery) {
       // Get all reports
       result = await pool.query(
-        'SELECT * FROM public."report"',
+        'SELECT * FROM public."report" ORDER BY id DESC',
       );
     } else {
       // Get searched reports
       result = await pool.query(
-        `SELECT * FROM public."report" WHERE username ILIKE '%${searchQuery}%' OR reporter ILIKE '%${searchQuery}%' OR violation ILIKE '%${searchQuery}%' OR location ILIKE '%${searchQuery}%'`,
+        `SELECT * FROM public."report" WHERE username ILIKE '%${searchQuery}%' OR reporter ILIKE '%${searchQuery}%' OR violation ILIKE '%${searchQuery}%' OR location ILIKE '%${searchQuery}%' ORDER BY id DESC`,
       );
     }
 
