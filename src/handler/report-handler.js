@@ -107,7 +107,7 @@ const uploadReport = async(request, h) => {
     const uploadPhotoResult = await uploadPhoto('report_photo', photo);
     photo = uploadPhotoResult.url;
 
-    //upload reprots
+    // Upload report 
     const result = await pool.query(
       'INSERT INTO public."report" (username, reporter, photo, violation, location, date, time) VALUES ($1, (SELECT name from public."user" WHERE username = $2), $3, $4, $5, $6, $7) RETURNING *', [
         username,
