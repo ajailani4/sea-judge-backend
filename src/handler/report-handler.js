@@ -50,14 +50,14 @@ const getReports = async (request, h) => {
   return response;
 };
 
-const getReportsUser = async (request, h) => {
+const getUserReports = async (request, h) => {
   const { username } = request.params;
   let response = '';
   let result = '';
 
   try {
     // Get all reports by username
-    result = await pool.query('SELECT * FROM public."report" WHERE username=$1', [username]);
+    result = await pool.query('SELECT * FROM public."report" WHERE username=$1 ORDER BY id DESC', [username]);
 
     response = h.response({
       code: 200,
@@ -150,4 +150,4 @@ const uploadReport = async (request, h) => {
   return response;
 };
 
-module.exports = { getReports, getReportsUser, uploadReport };
+module.exports = { getReports, getUserReports, uploadReport };

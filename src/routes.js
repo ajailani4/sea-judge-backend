@@ -1,5 +1,5 @@
 const { register, login } = require('./handler/user-handler');
-const { getReports, getReportsUser, uploadReport } = require('./handler/report-handler');
+const { getReports, getUserReports, uploadReport } = require('./handler/report-handler');
 
 const prefix = '/api/v1';
 
@@ -30,7 +30,7 @@ const routes = [
     method: 'GET',
     path: `${prefix}/users/{username}/reports`,
     config: { auth: 'jwt' },
-    handler: getReportsUser,
+    handler: getUserReports,
   },
   // Upload Report
   {
