@@ -32,7 +32,7 @@ const routes = [
     config: { auth: 'jwt' },
     handler: getReportsUser,
   },
-  // Upload Reports
+  // Upload Report
   {
     method: 'POST',
     path: `${prefix}/reports`,

@@ -1,7 +1,7 @@
 const pool = require('../config/db-config');
 const { uploadPhoto } = require('../util/cloudinary-util');
 
-const getReports = async(request, h) => {
+const getReports = async (request, h) => {
   const { searchQuery } = request.query;
   let response = '';
   let result = '';
@@ -50,7 +50,7 @@ const getReports = async(request, h) => {
   return response;
 };
 
-const getReportsUser = async(request, h) => {
+const getReportsUser = async (request, h) => {
   const { username } = request.params;
   let response = '';
   let result = '';
@@ -90,7 +90,7 @@ const getReportsUser = async(request, h) => {
   return response;
 };
 
-const uploadReport = async(request, h) => {
+const uploadReport = async (request, h) => {
   const {
     username,
     violation,
@@ -107,18 +107,16 @@ const uploadReport = async(request, h) => {
     const uploadPhotoResult = await uploadPhoto('report_photo', photo);
     photo = uploadPhotoResult.url;
 
-    // Upload report 
-    const result = await pool.query(
-      'INSERT INTO public."report" (username, reporter, photo, violation, location, date, time) VALUES ($1, (SELECT name from public."user" WHERE username = $2), $3, $4, $5, $6, $7) RETURNING *', [
-        username,
-        username,
-        photo,
-        violation,
-        location,
-        date,
-        time,
-      ],
-    );
+    // Upload report
+    const result = await pool.query('INSERT INTO public."report" (username, reporter, photo, violation, location, date, time) VALUES ($1, (SELECT name from public."user" WHERE username = $2), $3, $4, $5, $6, $7) RETURNING *', [
+      username,
+      username,
+      photo,
+      violation,
+      location,
+      date,
+      time,
+    ]);
 
     if (result) {
       response = h.response({
