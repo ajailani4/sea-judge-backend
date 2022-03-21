@@ -195,7 +195,7 @@ const updateReport = async (request, h) => {
           message: 'Report has been updated',
         });
 
-        response.code(201);
+        response.code(200);
       } else {
         response = h.response({
           code: 500,
