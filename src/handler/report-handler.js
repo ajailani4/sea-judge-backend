@@ -195,7 +195,7 @@ const updateReport = async(request, h) => {
       if (result) {
         response = h.response({
           code: 201,
-          status: 'updated',
+          status: 'Updated',
           message: 'Report has been updated',
         });
 
@@ -228,4 +228,4 @@ const updateReport = async(request, h) => {
   return response;
 };
 
-module.exports = { getReports, getReportsUser, uploadReport, updateReport };
+module.exports = { getReports, getUserReports, uploadReport, updateReport };

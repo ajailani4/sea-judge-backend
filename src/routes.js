@@ -1,9 +1,5 @@
 const { register, login } = require('./handler/user-handler');
-<<<<<<< HEAD
-const { getReports, getReportsUser, uploadReport, updateReport } = require('./handler/report-handler');
-=======
-const { getReports, getUserReports, uploadReport } = require('./handler/report-handler');
->>>>>>> 55a9944d2799fd10c32f4032803021403ebc0f23
+const { getReports, getUserReports, uploadReport, updateReport } = require('./handler/report-handler');
 
 const prefix = '/api/v1';
 
