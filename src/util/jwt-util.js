@@ -1,6 +1,6 @@
 const pool = require('../config/db-config');
 
-const validateJwt = async(decoded, request, h) => {
+const validateJwt = async (decoded, request, h) => {
   let isValidated = false;
 
   try {
@@ -19,7 +19,8 @@ const validateJwt = async(decoded, request, h) => {
   return { isValid: isValidated };
 };
 
-const generateJwt = (jwt, _username) => jwt.sign({
+const generateJwt = (jwt, _username) => jwt.sign(
+  {
     username: _username,
   },
   process.env.JWT_SECRET,

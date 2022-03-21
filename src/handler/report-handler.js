@@ -50,14 +50,14 @@ const getReports = async(request, h) => {
   return response;
 };
 
-const getReportsUser = async(request, h) => {
+const getUserReports = async(request, h) => {
   const { username } = request.params;
   let response = '';
   let result = '';
 
   try {
     // Get all reports by username
-    result = await pool.query('SELECT * FROM public."report" WHERE username=$1', [username]);
+    result = await pool.query('SELECT * FROM public."report" WHERE username=$1 ORDER BY id DESC', [username]);
 
     response = h.response({
       code: 200,
@@ -107,18 +107,16 @@ const uploadReport = async(request, h) => {
     const uploadPhotoResult = await uploadPhoto('report_photo', photo);
     photo = uploadPhotoResult.url;
 
-    // Upload report 
-    const result = await pool.query(
-      'INSERT INTO public."report" (username, reporter, photo, violation, location, date, time) VALUES ($1, (SELECT name from public."user" WHERE username = $2), $3, $4, $5, $6, $7) RETURNING *', [
-        username,
-        username,
-        photo,
-        violation,
-        location,
-        date,
-        time,
-      ],
-    );
+    // Upload report
+    const result = await pool.query('INSERT INTO public."report" (username, reporter, photo, violation, location, date, time) VALUES ($1, (SELECT name from public."user" WHERE username = $2), $3, $4, $5, $6, $7) RETURNING *', [
+      username,
+      username,
+      photo,
+      violation,
+      location,
+      date,
+      time,
+    ]);
 
     if (result) {
       response = h.response({
