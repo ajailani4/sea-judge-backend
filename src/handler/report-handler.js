@@ -190,8 +190,8 @@ const updateReport = async (request, h) => {
 
       if (result) {
         response = h.response({
-          code: 201,
-          status: 'Updated',
+          code: 200,
+          status: 'OK',
           message: 'Report has been updated',
         });
 
