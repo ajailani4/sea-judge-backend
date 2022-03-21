@@ -150,4 +150,82 @@ const uploadReport = async (request, h) => {
   return response;
 };
 
-module.exports = { getReports, getUserReports, uploadReport };
+// Update Report
+const isReportExist = async (id) => {
+  let isExist = false;
+
+  try {
+    const result = await pool.query('SELECT id FROM public."report" WHERE id=$1', [id]);
+
+    if (result.rows[0]) {
+      isExist = true;
+    } else {
+      isExist = false;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  return isExist;
+};
+
+const updateReport = async (request, h) => {
+  const { id } = request.params;
+  const {
+    violation,
+    location,
+    date,
+    time,
+  } = request.payload;
+  let response = '';
+
+  try {
+    if (await isReportExist(id)) {
+      const result = await pool.query('UPDATE public."report" SET violation=$1, location=$2, date=$3, time=$4 WHERE id=$5', [
+        violation,
+        location,
+        date,
+        time,
+        id,
+      ]);
+
+      if (result) {
+        response = h.response({
+          code: 201,
+          status: 'Updated',
+          message: 'Report has been updated',
+        });
+
+        response.code(201);
+      } else {
+        response = h.response({
+          code: 500,
+          status: 'Internal Server Error',
+          message: 'Report cannot be edited',
+        });
+
+        response.code(500);
+      }
+    } else {
+      response = h.response({
+        code: 404,
+        status: 'Not Found',
+        message: 'Report is not found',
+      });
+
+      response.code(404);
+    }
+  } catch (err) {
+    response = h.response({
+      code: 400,
+      status: 'Bad Request',
+      message: 'error',
+    });
+
+    response.code(400);
+  }
+  return response;
+};
+
+module.exports = {
+  getReports, getUserReports, uploadReport, updateReport,
+};
