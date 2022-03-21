@@ -153,6 +153,24 @@ const uploadReport = async(request, h) => {
 };
 
 // Update Report
+const isReprotExist = async(id) => {
+  let isExist = false;
+
+  try {
+    const getid = await pool.query(
+      `SELECT id FROM public."report" WHERE id=$1`, [id],
+    );
+
+    if (getid) {
+      isExist = true;
+    } else {
+      isExist = false;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  return isExist;
+};
 
 const updateReport = async(request, h) => {
   const { id } = request.params;
@@ -163,33 +181,42 @@ const updateReport = async(request, h) => {
     time,
   } = request.payload;
   let response = '';
+
   try {
-    const result = await pool.query(
-      `UPDATE public."report" SET violation=$1, location=$2, date=$3, time=$4 WHERE id=$5`, [
-        violation,
-        location,
-        date,
-        time,
-        id,
-      ],
-    );
+    if (await isReprotExist(id)) {
+      const result = await pool.query(
+        `UPDATE public."report" SET violation=$1, location=$2, date=$3, time=$4 WHERE id=$5`, [
+          violation,
+          location,
+          date,
+          time,
+          id,
+        ],
+      );
 
-    if (result) {
-      response = h.response({
-        code: 201,
-        status: 'updated',
-        message: 'report has been updated',
-      });
+      if (result) {
+        response = h.response({
+          code: 201,
+          status: 'updated',
+          message: 'Report has been updated',
+        });
 
-      response.code(201);
+        response.code(201);
+      } else {
+        response = h.response({
+          code: 500,
+          status: 'Internal Server Error',
+          message: 'Report cannot be edited',
+        });
+
+        response.code(500);
+      }
     } else {
       response = h.response({
-        code: 500,
-        status: 'Internal Server Error',
-        message: 'New report cannot be added',
+        code: 404,
+        status: 'Not Found',
+        message: 'Report is not found',
       });
-
-      response.code(500);
     }
   } catch (err) {
     response = h.response({

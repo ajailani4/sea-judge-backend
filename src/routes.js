@@ -50,9 +50,6 @@ const routes = [
     path: `${prefix}/reports/{id}`,
     config: {
       auth: 'jwt',
-      payload: {
-        multipart: true,
-      },
     },
 
     handler: updateReport,
