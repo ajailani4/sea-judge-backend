@@ -151,15 +151,15 @@ const uploadReport = async(request, h) => {
 };
 
 // Update Report
-const isReprotExist = async(id) => {
+const isReportExist = async(id) => {
   let isExist = false;
 
   try {
-    const getid = await pool.query(
+    const result = await pool.query(
       `SELECT id FROM public."report" WHERE id=$1`, [id],
     );
 
-    if (getid) {
+    if (result.rows[0]) {
       isExist = true;
     } else {
       isExist = false;
@@ -181,7 +181,7 @@ const updateReport = async(request, h) => {
   let response = '';
 
   try {
-    if (await isReprotExist(id)) {
+    if (await isReportExist(id)) {
       const result = await pool.query(
         `UPDATE public."report" SET violation=$1, location=$2, date=$3, time=$4 WHERE id=$5`, [
           violation,
@@ -215,6 +215,8 @@ const updateReport = async(request, h) => {
         status: 'Not Found',
         message: 'Report is not found',
       });
+
+      response.code(404);
     }
   } catch (err) {
     response = h.response({
