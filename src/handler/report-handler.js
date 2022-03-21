@@ -1,7 +1,7 @@
 const pool = require('../config/db-config');
 const { uploadPhoto } = require('../util/cloudinary-util');
 
-const getReports = async(request, h) => {
+const getReports = async (request, h) => {
   const { searchQuery } = request.query;
   let response = '';
   let result = '';
@@ -50,7 +50,7 @@ const getReports = async(request, h) => {
   return response;
 };
 
-const getUserReports = async(request, h) => {
+const getUserReports = async (request, h) => {
   const { username } = request.params;
   let response = '';
   let result = '';
@@ -90,7 +90,7 @@ const getUserReports = async(request, h) => {
   return response;
 };
 
-const uploadReport = async(request, h) => {
+const uploadReport = async (request, h) => {
   const {
     username,
     violation,
@@ -151,13 +151,11 @@ const uploadReport = async(request, h) => {
 };
 
 // Update Report
-const isReportExist = async(id) => {
+const isReportExist = async (id) => {
   let isExist = false;
 
   try {
-    const result = await pool.query(
-      `SELECT id FROM public."report" WHERE id=$1`, [id],
-    );
+    const result = await pool.query('SELECT id FROM public."report" WHERE id=$1', [id]);
 
     if (result.rows[0]) {
       isExist = true;
@@ -170,7 +168,7 @@ const isReportExist = async(id) => {
   return isExist;
 };
 
-const updateReport = async(request, h) => {
+const updateReport = async (request, h) => {
   const { id } = request.params;
   const {
     violation,
@@ -182,15 +180,13 @@ const updateReport = async(request, h) => {
 
   try {
     if (await isReportExist(id)) {
-      const result = await pool.query(
-        `UPDATE public."report" SET violation=$1, location=$2, date=$3, time=$4 WHERE id=$5`, [
-          violation,
-          location,
-          date,
-          time,
-          id,
-        ],
-      );
+      const result = await pool.query('UPDATE public."report" SET violation=$1, location=$2, date=$3, time=$4 WHERE id=$5', [
+        violation,
+        location,
+        date,
+        time,
+        id,
+      ]);
 
       if (result) {
         response = h.response({
@@ -230,4 +226,6 @@ const updateReport = async(request, h) => {
   return response;
 };
 
-module.exports = { getReports, getUserReports, uploadReport, updateReport };
+module.exports = {
+  getReports, getUserReports, uploadReport, updateReport,
+};
