@@ -152,4 +152,55 @@ const uploadReport = async(request, h) => {
   return response;
 };
 
-module.exports = { getReports, getReportsUser, uploadReport };
+// Update Report
+
+const updateReport = async(request, h) => {
+  const { id } = request.params;
+  const {
+    violation,
+    location,
+    date,
+    time,
+  } = request.payload;
+  let response = '';
+  try {
+    const result = await pool.query(
+      `UPDATE public."report" SET violation=$1, location=$2, date=$3, time=$4 WHERE id=$5`, [
+        violation,
+        location,
+        date,
+        time,
+        id,
+      ],
+    );
+
+    if (result) {
+      response = h.response({
+        code: 201,
+        status: 'updated',
+        message: 'report has been updated',
+      });
+
+      response.code(201);
+    } else {
+      response = h.response({
+        code: 500,
+        status: 'Internal Server Error',
+        message: 'New report cannot be added',
+      });
+
+      response.code(500);
+    }
+  } catch (err) {
+    response = h.response({
+      code: 400,
+      status: 'Bad Request',
+      message: 'error',
+    });
+
+    response.code(400);
+  }
+  return response;
+};
+
+module.exports = { getReports, getReportsUser, uploadReport, updateReport };
