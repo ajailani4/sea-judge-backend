@@ -18,4 +18,8 @@ const uploadPhoto = (folderName, photo) => new Promise((resolve, reject) => {
   streamifier.createReadStream(photo).pipe(uploadStream);
 });
 
-module.exports = { uploadPhoto };
+const deletePhoto = async (publicId) => {
+  cloudinary.uploader.destroy(publicId);
+};
+
+module.exports = { uploadPhoto, deletePhoto };

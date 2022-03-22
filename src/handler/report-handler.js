@@ -1,5 +1,5 @@
 const pool = require('../config/db-config');
-const { uploadPhoto } = require('../util/cloudinary-util');
+const { uploadPhoto, deletePhoto } = require('../util/cloudinary-util');
 
 const getReports = async (request, h) => {
   const { searchQuery } = request.query;
@@ -226,6 +226,69 @@ const updateReport = async (request, h) => {
   return response;
 };
 
+const deleteReport = async (request, h) => {
+  const { id } = request.params;
+  let result = '';
+  let response = '';
+
+  try {
+    if (await isReportExist(id)) {
+      // Get photo url
+      result = await pool.query(
+        'SELECT photo FROM public."report" WHERE id=$1',
+        [id],
+      );
+
+      // Delete report photo from Cloudinary
+      const pathNames = result.rows[0].photo.split('/');
+      const publicId = `${pathNames[pathNames.length - 2]}/${pathNames[pathNames.length - 1]}`.split('.')[0];
+      await deletePhoto(publicId);
+
+      // Delete report from database
+      result = await pool.query(
+        'DELETE FROM public."report" WHERE id=$1',
+        [id],
+      );
+
+      if (result) {
+        response = h.response({
+          code: 200,
+          status: 'OK',
+          message: 'Report has been deleted',
+        });
+
+        response.code(200);
+      } else {
+        response = h.response({
+          code: 500,
+          status: 'Internal Server Error',
+          message: 'Report cannot be deleted',
+        });
+
+        response.code(500);
+      }
+    } else {
+      response = h.response({
+        code: 404,
+        status: 'Not Found',
+        message: 'Report is not found',
+      });
+
+      response.code(404);
+    }
+  } catch (err) {
+    response = h.response({
+      code: 400,
+      status: 'Bad Request',
+      message: 'error',
+    });
+
+    response.code(400);
+  }
+
+  return response;
+};
+
 module.exports = {
-  getReports, getUserReports, uploadReport, updateReport,
+  getReports, getUserReports, uploadReport, updateReport, deleteReport,
 };
