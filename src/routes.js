@@ -1,6 +1,6 @@
 const { register, login } = require('./handler/user-handler');
 const {
-  getReports, getUserReports, uploadReport, updateReport,
+  getReports, getUserReports, uploadReport, updateReport, deleteReport,
 } = require('./handler/report-handler');
 
 const prefix = '/api/v1';
@@ -53,8 +53,16 @@ const routes = [
     config: {
       auth: 'jwt',
     },
-
     handler: updateReport,
+  },
+  // Delete Report
+  {
+    method: 'DELETE',
+    path: `${prefix}/reports/{id}`,
+    config: {
+      auth: 'jwt',
+    },
+    handler: deleteReport,
   },
 ];
 
